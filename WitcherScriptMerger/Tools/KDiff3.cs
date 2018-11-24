@@ -13,7 +13,7 @@ namespace WitcherScriptMerger.Tools
             FileMerger.MergeSource source1,
             FileMerger.MergeSource source2,
             FileInfo vanillaFile,
-            string outputPath)
+            string outputPath, bool followFileLinks)
         {
             if (!File.Exists(ExePath))
             {
@@ -33,8 +33,8 @@ namespace WitcherScriptMerger.Tools
                 : "");
 
             // resolve any simlinked files
-            var source1FullName = source1.TextFile.ResolveTargetFileFullName();
-            var source2FullName = source2.TextFile.ResolveTargetFileFullName();
+            var source1FullName = followFileLinks ? source1.TextFile.ResolveTargetFileFullName() : source1.TextFile.FullName;
+            var source2FullName = followFileLinks ? source2.TextFile.ResolveTargetFileFullName() : source2.TextFile.FullName;
 
             args +=
                 $"\"{source1FullName}\" \"{source2FullName}\" " +

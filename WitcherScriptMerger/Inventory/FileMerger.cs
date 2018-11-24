@@ -192,7 +192,7 @@ namespace WitcherScriptMerger.Inventory
                 var metadata2 = checkedModNodes[i].GetMetadata();
                 var source2 = MergeSource.FromFlatFile(new FileInfo(metadata2.FilePath), metadata2.FileHash);
                 
-                var mergedFile = MergeText(merge, source1, source2);
+                var mergedFile = MergeText(merge, source1, source2, false);
                 if (mergedFile != null)
                 {
                     source1 = MergeSource.FromFlatFile(mergedFile, null);
@@ -234,7 +234,7 @@ namespace WitcherScriptMerger.Inventory
                     break;
                 }
 
-                var mergedFile = MergeText(merge, source1, source2);
+                var mergedFile = MergeText(merge, source1, source2, true);
                 if (mergedFile != null)
                 {
                     source1 = MergeSource.FromFlatFile(mergedFile, null);
@@ -250,11 +250,11 @@ namespace WitcherScriptMerger.Inventory
             }
         }
 
-        FileInfo MergeText(Merge merge, MergeSource source1, MergeSource source2)
+        FileInfo MergeText(Merge merge, MergeSource source1, MergeSource source2, bool isBundled)
         {
             ProgressInfo.CurrentAction = $"Merging {source1.Name} && {source2.Name} — waiting for KDiff3 to close";
 
-            var exitCode = KDiff3.Run(source1, source2, _vanillaFile, _outputPath);
+            var exitCode = KDiff3.Run(source1, source2, _vanillaFile, _outputPath, !isBundled);
 
             if (exitCode == 0)
             {

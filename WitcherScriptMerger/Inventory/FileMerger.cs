@@ -338,17 +338,24 @@ namespace WitcherScriptMerger.Inventory
             {
                 ProgressInfo.CurrentAction = "Searching for corresponding vanilla bundle";
 
-                var bundleDirs =
+                var bundleDirsList =
                     Directory.GetDirectories(Paths.BundlesDirectory)
                         .Select(path => Path.Combine(path, "bundles"))
                         .Concat(
                             Directory.GetDirectories(Paths.DlcDirectory)
-                                .Where(path => new Regex("DLC[0-9]*$").IsMatch(path) || new Regex("ep[0-9]$").IsMatch(path))
+                                .Where(path => new Regex("DLC[0-9]*$").IsMatch(path) || new Regex("ep[0-9]$").IsMatch(path) || new Regex("bob$").IsMatch(path))
                                 .Select(path => Path.Combine(path, Paths.BundleBase, "bundles"))
                         )
                         .Where(path => Directory.Exists(path))
                         .OrderBy(path => path, new LoadOrderComparer())
-                        .ToArray();
+                        .ToList();
+
+                // Ensure patch bundle directories are always last
+                var patchDirs = bundleDirsList.FindAll(x => x.Contains("patch"));
+                var bundleDirs = bundleDirsList
+                    .Except(patchDirs)
+                    .Union(patchDirs)
+                    .ToArray();
 
                 for (int i = bundleDirs.Length - 1; i >= 0; --i)  // Search vanilla directories in reverse
                 {                                                 // order, as patches & DLC override content.

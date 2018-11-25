@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WitcherScriptMerger.Controls;
@@ -27,7 +28,7 @@ namespace WitcherScriptMerger.Forms
         public MainForm()
         {
             InitializeComponent();
-            this.Text += " v" + Application.ProductVersion;
+            this.Text += " v" + Application.ProductVersion + " (Unofficial Patch " + Assembly.GetEntryAssembly().GetName().Version.Revision + ")";
         }
 
         void MainForm_Load(object sender, EventArgs e)

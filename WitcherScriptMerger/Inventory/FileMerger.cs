@@ -343,7 +343,9 @@ namespace WitcherScriptMerger.Inventory
                         .Select(path => Path.Combine(path, "bundles"))
                         .Concat(
                             Directory.GetDirectories(Paths.DlcDirectory)
-                                .Where(path => new Regex("DLC[0-9]*$").IsMatch(path) || new Regex("ep[0-9]$").IsMatch(path) || new Regex("bob$").IsMatch(path))
+                                .Where(path =>  new Regex("DLC[0-9]*$", RegexOptions.IgnoreCase).IsMatch(path) ||
+                                                new Regex("ep[0-9]$", RegexOptions.IgnoreCase).IsMatch(path) ||
+                                                new Regex("bob$", RegexOptions.IgnoreCase).IsMatch(path))
                                 .Select(path => Path.Combine(path, Paths.BundleBase, "bundles"))
                         )
                         .Where(path => Directory.Exists(path))
